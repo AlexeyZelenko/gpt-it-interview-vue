@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { Language, Question, QuestionType } from '../types';
 
 const openai = new OpenAI({
-  apiKey: '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',
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY as string,
   dangerouslyAllowBrowser: true
 });
 

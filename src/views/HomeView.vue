@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { BrainCircuit } from 'lucide-vue-next';
 import { useInterviewStore } from '../stores/interview';
 import InterviewIdInput from '../components/InterviewIdInput.vue';
@@ -86,7 +85,6 @@ import QuestionCountSelect from '../components/QuestionCountSelect.vue';
 import QuestionTypeSelect from '../components/QuestionTypeSelect.vue';
 import InterviewQuestion from '../components/InterviewQuestion.vue';
 
-const router = useRouter();
 const interviewStore = useInterviewStore();
 
 const canStartInterview = computed(() => 

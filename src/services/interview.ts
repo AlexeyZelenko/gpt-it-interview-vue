@@ -1,15 +1,24 @@
 import { db } from '../config/firebase';
 import { collection, addDoc, updateDoc, doc, getDoc } from 'firebase/firestore';
-import { Interview, Question, Technology, Difficulty, Language } from '../types';
-import { generateQuestion, evaluateAnswer, generateOverallFeedback } from './openai';
+import { Interview, Question, Technology, Difficulty, Language, QuestionType } from '../types';
+import { evaluateAnswer, generateOverallFeedback } from './openai';
 
 export const createInterview = async (
-  technology: Technology,
-  difficulty: Difficulty,
-  language: Language,
-  questionCount: number
+    technology: Technology,
+    difficulty: Difficulty,
+    language: Language,
+    questionCount: number
 ): Promise<string> => {
-  const interview: Omit<Interview, 'id'> = {
+  const interview: {
+    difficulty: "beginner" | "intermediate" | "advanced";
+    questionCount: number;
+    score: number;
+    questions: any[];
+    language: "English" | "Ukrainian" | "Russian";
+    technology: "React" | "Vue" | "Angular" | "Node.js" | "Python" | "TypeScript" | "JavaScript" | "Java" | "C#" | "PHP" | "Go" | "Ruby" | "Swift" | "Kotlin" | "Rust";
+    completed: boolean;
+    overallFeedback: string
+  } = {
     technology,
     difficulty,
     language,
@@ -25,15 +34,17 @@ export const createInterview = async (
 };
 
 export const submitAnswer = async (
-  interviewId: string,
-  questionText: string,
-  answer: string,
-  technology: string,
-  language: Language
+    interviewId: string,
+    questionText: string,
+    answer: string,
+    technology: Technology,
+    language: Language,
+    type: QuestionType
 ): Promise<Question> => {
-  const evaluation = await evaluateAnswer(questionText, answer, technology, language);
-  
+  const evaluation = await evaluateAnswer(questionText, answer, technology, language, type);
+
   const question: Question = {
+    type,
     id: Date.now().toString(),
     question: questionText,
     userAnswer: answer,

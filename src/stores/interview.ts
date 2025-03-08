@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Technology, Difficulty, Language, Question, Interview, QuestionType } from '../types';
-import { createInterview, submitAnswer, getInterviewResults } from '../services/interview';
+import type { Technology, Difficulty, Language, Question, QuestionType } from '../types';
+import { createInterview, submitAnswer } from '../services/interview';
 import { generateQuestion } from '../services/openai';
 
 export const useInterviewStore = defineStore('interview', () => {
@@ -54,31 +54,33 @@ export const useInterviewStore = defineStore('interview', () => {
       technology.value,
       language.value,
       questionType.value,
-      currentSampleSolution.value || undefined
     );
     questionResult.value = result;
     showNextButton.value = true;
   }
 
-  async function handleNextQuestion() {
-    if (!technology.value || !difficulty.value || !language.value || !questionCount.value || !questionType.value) return;
+  async function handleNextQuestion(): Promise<{ completed: boolean; interviewId: string | null }> {
+    if (!technology.value || !difficulty.value || !language.value || !questionCount.value || !questionType.value) {
+      return { completed: false, interviewId: null };
+    }
 
     if (questionNumber.value === questionCount.value) {
       return { completed: true, interviewId: interviewId.value };
     }
 
     const { question, sampleSolution } = await generateQuestion(
-      technology.value,
-      difficulty.value,
-      language.value,
-      questionType.value
+        technology.value,
+        difficulty.value,
+        language.value,
+        questionType.value
     );
     currentQuestion.value = question;
     currentSampleSolution.value = sampleSolution || null;
     questionResult.value = null;
     questionNumber.value++;
     showNextButton.value = false;
-    return { completed: false };
+
+    return { completed: false, interviewId: null };
   }
 
   function reset() {
