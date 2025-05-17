@@ -2,7 +2,7 @@
 
 An AI-powered technical interview preparation platform built with Vue 3, TypeScript, and OpenAI.
 
-![IT Interview Practice](https://images.pexels.com/photos/7654096/pexels-photo-7654096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
+![IT Interview Practice](https://interview-practice-344fe.web.app/)
 
 ## Features
 
